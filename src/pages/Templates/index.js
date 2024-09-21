@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import * as C from "./styles";
 import Navbar from "../../components/Navbar/Navbar";
-import useApi from "../../services/api";
+import useApi from "../../services/apiTemplates";
 import CreateTemplateModal from "../../components/ModalCreateTemplate/CreateTemplateModal";
+import DeleteTemplateModal from "../../components/ModalDeleteTemplate/DeleteTemplateModal"; 
+import EditarTemplateModal from "../../components/ModalEditarTemplate/EditarTemplateModal"; 
 
 const Templates = ()  => {
   const [templates, setTemplates] = useState([]);
@@ -14,14 +16,14 @@ const Templates = ()  => {
   const [isViewDetailsModalOpen, setIsViewDetailsModalOpen] = useState(false);
   const [selectedTemplateId, setSelectedTemplateId] = useState(null);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
-  const { getTemplates, deleteTemplate } = useApi();
+  const { getTemplates, deleteTemplate, downloadTemplate } = useApi();
   
   useEffect(() => {
     const fetchTemplates = async () => {
       try {
         const data = await getTemplates();
-        setTemplates(data.data);
-        setFilteredTemplates(data.data); // Inicialize o filtro com todos os dados
+        setTemplates(data);
+        setFilteredTemplates(data); // Inicialize o filtro com todos os dados
       } catch (error) {
         console.error("Erro ao carregar templates:", error);
       }
@@ -30,10 +32,10 @@ const Templates = ()  => {
   }, []);
 
   useEffect(() => {
-    // Filtra a lista de pessoas com base na consulta de busca
+    // Filtra a lista de templates com base na consulta de busca
     setFilteredTemplates(
       templates.filter((template) =>
-        template.nome.toLowerCase().includes(searchQuery.toLowerCase()) 
+        template.descricao.toLowerCase().includes(searchQuery.toLowerCase()) 
       )
     );
   }, [searchQuery, templates]);
@@ -57,7 +59,7 @@ const Templates = ()  => {
 
   const handleNewTemplateCreated = async () => {
     const data = await getTemplates();
-    setTemplates(data.data);
+    setTemplates(data);
   };
 
   const handleDelete = async () => {
@@ -89,7 +91,7 @@ const Templates = ()  => {
 
   const handleTemplateUpdated = async () => {
     const data = await getTemplates();
-    setTemplates(data.data);
+    setTemplates(data);
     handleEditModalClose();
   };
 
@@ -103,6 +105,39 @@ const Templates = ()  => {
     setSelectedTemplate(null);
   };
 
+  const handleDownloadTemplate = async (template) => {
+    try {
+        const response = await downloadTemplate(template.nome);
+        const fileContent = response;
+        //console.log(fileContent)
+        generateAndDownloadDocx(fileContent,template.nome);
+    } catch (error) {
+        console.error("Erro ao gerar arquivo completado:", error);
+    }
+};
+
+const generateAndDownloadDocx = (data, fileName) => {
+  try {
+    // Converta os dados em um Blob
+    const blob = new Blob([data], {
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    });
+    //console.log(blob);
+    // Crie um URL para o Blob
+    const url = URL.createObjectURL(blob);
+
+    // Crie um link ancorado para fazer o download
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    link.click();
+    // Libere o URL criado
+    URL.revokeObjectURL(url);
+    //console.log("Document created and downloaded successfully");
+  } catch (error) {
+    console.error("Error generating or downloading document:", error);
+  }
+};
 
   return (
     <C.Container>
@@ -110,7 +145,7 @@ const Templates = ()  => {
       <C.Title>Templates</C.Title>
       <C.SearchInput 
         type="text" 
-        placeholder="Pesquisar por nome" 
+        placeholder="Pesquisar por descrição" 
         value={searchQuery} 
         onChange={handleSearchChange} 
       />
@@ -118,8 +153,8 @@ const Templates = ()  => {
       <C.Table>
         <thead>
           <tr>
-            <C.TableHeader>Nome</C.TableHeader>
-            <C.TableHeader>Arquivo</C.TableHeader>
+            <C.TableHeader>Descrição</C.TableHeader>
+            <C.TableHeader>nome</C.TableHeader>
             <C.TableHeader>Criado em</C.TableHeader>
             <C.TableHeader>Ações</C.TableHeader>
           </tr>
@@ -127,15 +162,16 @@ const Templates = ()  => {
         <tbody>
           {filteredTemplates.map((template) => (
             <C.TableRow key={template.id}>
+              <C.TableData>{template.descricao}</C.TableData>
               <C.TableData>{template.nome}</C.TableData>
-              <C.TableData>{template.cpf}</C.TableData>
               <C.TableData>
                 {new Date(template.createdAt).toLocaleDateString()}
               </C.TableData>
               <C.TableData>
-               {/* <C.ActionButton onClick={() => openEditModal(template)}>Editar</C.ActionButton>
-                <C.ActionButton onClick={() => handleViewDetails(template)}>Detalhes</C.ActionButton>
-                <C.ActionButton onClick={() => openDeleteModal(template.id)}>Excluir</C.ActionButton>*/} 
+                <C.ActionButton onClick={() => openEditModal(template)}>Editar</C.ActionButton>
+               {/* <C.ActionButton onClick={() => handleViewDetails(template)}>Detalhes</C.ActionButton>*/}
+                <C.DeleteButton onClick={() => openDeleteModal(template.id)}>Excluir</C.DeleteButton>
+                <C.DetailsButton onClick={() => handleDownloadTemplate(template)}>Baixar</C.DetailsButton>
               </C.TableData>
             </C.TableRow>
           ))}
@@ -146,18 +182,18 @@ const Templates = ()  => {
         onClose={handleModalClose}
         onCreate={handleNewTemplateCreated}
       />
-     {/*  <DeleteTemplateModal
+     <DeleteTemplateModal
         isOpen={isDeleteModalOpen}
         onClose={handleDeleteModalClose}
         onDelete={handleDelete}
       />
-      <EditTemplateModal
+       <EditarTemplateModal
         isOpen={isEditModalOpen}
         onClose={handleEditModalClose}
-        pessoa={selectedTemplate}
+        template={selectedTemplate}
         onEdit={handleTemplateUpdated}
       />
-      <DetalhesTemplateModal
+     {/*  <DetalhesTemplateModal
         isOpen={isViewDetailsModalOpen}
         onClose={handleViewDetailsModalClose}
         pessoa={selectedTemplate}

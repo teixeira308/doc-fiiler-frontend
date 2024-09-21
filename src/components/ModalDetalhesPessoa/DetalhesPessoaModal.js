@@ -25,22 +25,22 @@ const DetalhesPessoaModal = ({ isOpen, onClose, pessoa }) => {
             <strong>RG:</strong> {pessoa.rg}
           </div><br/>
           <div>
-            <strong>Data de Nascimento:</strong> {pessoa.dataNascimento}
+            <strong>Data de Nascimento:</strong> {pessoa.datanascimento}
           </div><br/>
           <div>
-            <strong>Número da Carteira de Trabalho:</strong> {pessoa.numeroCarteiraTrabalho}
+            <strong>Número da Carteira de Trabalho:</strong> {pessoa.numerocarteiratrabalho}
           </div><br/>
           <div>
             <strong>E-mail:</strong> {pessoa.email}
           </div><br/>
           <div>
-            <strong>Data de Admissão:</strong> {pessoa.dataAdmissao}
+            <strong>Data de Admissão:</strong> {pessoa.dataadmissao}
           </div><br/>
           <div>
-            <strong>Nome da Mãe:</strong> {pessoa.nomeMae}
+            <strong>Nome da Mãe:</strong> {pessoa.nomemae}
           </div><br/>
           <div>
-            <strong>Nome do Pai:</strong> {pessoa.nomePai}
+            <strong>Nome do Pai:</strong> {pessoa.nomepai}
           </div><br/>
           <div>
             <strong>Endereço:</strong> {pessoa.endereco}
@@ -49,7 +49,7 @@ const DetalhesPessoaModal = ({ isOpen, onClose, pessoa }) => {
             <strong>Telefone:</strong> {pessoa.telefone}
           </div><br/>
           <div>
-            <strong>Estado Civil:</strong> {pessoa.estadoCivil}
+            <strong>Estado Civil:</strong> {pessoa.estadocivil}
           </div><br/>
           <div>
             <strong>Função:</strong> {pessoa.funcao}

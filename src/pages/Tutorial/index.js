@@ -32,14 +32,18 @@ const Tutorial = () => {
                                             <li>Nome &#123;nome&#125;</li>
                                             <li>RG &#123;rg&#125;</li>
                                             <li>CPF &#123;cpf&#125;</li>
-                                            <li>Data de Nascimento &#123;data_nascimento&#125;</li>
+                                            <li>Data de Nascimento &#123;datanascimento&#125;</li>
                                             <li>Genero &#123;genero&#125;</li>
                                             <li>Estado Civil &#123;estadocivil&#125;</li>
-                                            <li>Número da carteira de trabalho &#123;carteiratrabalho&#125;</li>
-                                            <li>Função no trabalho &#123;funcaotrabalho&#125;</li>
+                                            <li>Número da carteira de trabalho &#123;numerocarteiratrabalho&#125;</li>
+                                            <li>Função no trabalho &#123;funcao&#125;</li>
+                                            <li>Data de Admissão &#123;dataadmissao&#125;</li>
                                             <li>Endereço &#123;endereco&#125;</li>
                                             <li>Telefone &#123;telefone&#125;</li>
+                                            <li>Celular &#123;celular&#125;</li>
                                             <li>E-mail &#123;email&#125;</li>
+                                            <li>Nome Pai &#123;nomepai&#125;</li>
+                                            <li>Nome Mãe &#123;nomemae&#125;</li>
                                         </ul>
                                     </li>
                                     <li>Insira nos documentos os dados que são necessários para completar automaticamente</li>

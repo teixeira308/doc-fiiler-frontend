@@ -6,6 +6,7 @@ import CreatePessoaModal from "../../components/ModalCreatePessoa/CreatePessoaMo
 import DeletePessoaModal from "../../components/ModalDeletePessoa/DeletePessoaModal"; 
 import EditPessoaModal from "../../components/ModalEditarPessoa/EditarPessoaModal";
 import DetalhesPessoaModal from "../../components/ModalDetalhesPessoa/DetalhesPessoaModal";
+import GerarDocumentoPessoaModal from "../../components/ModalGerarDocumentoPessoa/GerarDocumentoPessoaModal";
 
 const Pessoas = () => {
   const [pessoas, setPessoas] = useState([]);
@@ -13,12 +14,14 @@ const Pessoas = () => {
   const [searchQuery, setSearchQuery] = useState(""); // Estado para a consulta de busca
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isGenerateFileModalOpen, setIsGenerateFileModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isViewDetailsModalOpen, setIsViewDetailsModalOpen] = useState(false);
   const [selectedPessoaId, setSelectedPessoaId] = useState(null);
   const [selectedPessoa, setSelectedPessoa] = useState(null);
   const { getPessoas, deletePessoa } = useApi();
   
+  //Use effect
   useEffect(() => {
     const fetchPessoas = async () => {
       try {
@@ -41,21 +44,14 @@ const Pessoas = () => {
     );
   }, [searchQuery, pessoas]);
 
+  //Handle actions
+
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
 
   const handleCreateButtonClick = () => {
     setIsModalOpen(true);
-  };
-
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleDeleteModalClose = () => {
-    setIsDeleteModalOpen(false);
-    setSelectedPessoaId(null);
   };
 
   const handleNewPessoaCreated = async () => {
@@ -75,6 +71,10 @@ const Pessoas = () => {
     }
   };
 
+  
+
+  //Open Modal
+
   const openDeleteModal = (id) => {
     setSelectedPessoaId(id);
     setIsDeleteModalOpen(true);
@@ -85,11 +85,12 @@ const Pessoas = () => {
     setIsEditModalOpen(true);
   };
 
-  const handleEditModalClose = () => {
-    setIsEditModalOpen(false);
-    setSelectedPessoa(null);
+  const openGenerateFileModal = (pessoa) => {
+    setSelectedPessoa(pessoa);
+    setIsGenerateFileModalOpen(true);
   };
 
+  
   const handlePessoaUpdated = async () => {
     const data = await getPessoas();
     setPessoas(data.data);
@@ -101,9 +102,29 @@ const Pessoas = () => {
     setIsViewDetailsModalOpen(true);
   };
 
+  //Handle close modal
   const handleViewDetailsModalClose = () => {
     setIsViewDetailsModalOpen(false);
     setSelectedPessoa(null);
+  };
+
+  const handleGenerateFileModalClose = () => {
+    setIsGenerateFileModalOpen(false);
+    setSelectedPessoa(null);
+  };
+
+  const handleEditModalClose = () => {
+    setIsEditModalOpen(false);
+    setSelectedPessoa(null);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleDeleteModalClose = () => {
+    setIsDeleteModalOpen(false);
+    setSelectedPessoaId(null);
   };
 
   return (
@@ -136,8 +157,9 @@ const Pessoas = () => {
               </C.TableData>
               <C.TableData>
                 <C.ActionButton onClick={() => openEditModal(pessoa)}>Editar</C.ActionButton>
-                <C.ActionButton onClick={() => handleViewDetails(pessoa)}>Detalhes</C.ActionButton>
-                <C.ActionButton onClick={() => openDeleteModal(pessoa.id)}>Excluir</C.ActionButton>
+                <C.DetailsButton onClick={() => handleViewDetails(pessoa)}>Detalhes</C.DetailsButton>
+                <C.DeleteButton onClick={() => openDeleteModal(pessoa.id)}>Excluir</C.DeleteButton>
+                <C.ActionButton onClick={() => openGenerateFileModal(pessoa)}>Gerar documento</C.ActionButton>
               </C.TableData>
             </C.TableRow>
           ))}
@@ -162,6 +184,11 @@ const Pessoas = () => {
       <DetalhesPessoaModal
         isOpen={isViewDetailsModalOpen}
         onClose={handleViewDetailsModalClose}
+        pessoa={selectedPessoa}
+      />
+      <GerarDocumentoPessoaModal
+        isOpen={isGenerateFileModalOpen}
+        onClose={handleGenerateFileModalClose}
         pessoa={selectedPessoa}
       />
     </C.Container>

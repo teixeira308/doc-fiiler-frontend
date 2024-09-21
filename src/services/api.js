@@ -1,8 +1,11 @@
 // src/services/api.js
 import { useContext } from "react";
 import { AuthContext } from "../contexts/auth";
+import { useNavigate } from 'react-router-dom';
+
 const useApi = () => {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const getPessoas = async () => {
     const response = await fetch("http://localhost:3000/v1/pessoas", {
@@ -12,7 +15,10 @@ const useApi = () => {
         Authorization: `Bearer ${user?.token}`,
       },
     });
-
+    if (response.status === 403) {
+      // Redireciona para a tela de login
+      navigate('/login');
+  }
     if (!response.ok) {
       throw new Error("Erro ao buscar pessoas");
     }
@@ -30,6 +36,10 @@ const useApi = () => {
       },
       body: JSON.stringify(json),
     });
+    if (response.status === 403) {
+      // Redireciona para a tela de login
+      navigate('/login');
+  }
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -46,6 +56,11 @@ const useApi = () => {
         Authorization: `Bearer ${user?.token}`,
       },
     });
+
+    if (response.status === 403) {
+      // Redireciona para a tela de login
+      navigate('/login');
+  }
 
     if (!response.ok) {
       throw new Error("Erro ao deletar pessoa");
@@ -73,6 +88,11 @@ const updatePessoa = async (id, pessoaData) => {
     },
     body: JSON.stringify(pessoaData),
   });
+
+  if (response.status === 403) {
+    // Redireciona para a tela de login
+    navigate('/login');
+}
 
   if (!response.ok) {
     const errorData = await response.json();

@@ -38,6 +38,8 @@ const Signin = () => {
 
   return (
     <C.Container>
+      <img src="favicon.png" alt="Descrição da imagem" style={{ width: '100px', marginBottom: '20px' }} />
+      
       <C.Label>Doc Filler</C.Label>
       <C.Content>
         <Input

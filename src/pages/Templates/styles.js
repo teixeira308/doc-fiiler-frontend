@@ -60,6 +60,7 @@ export const TableData = styled.td`
 export const ActionButton = styled.button`
   margin-right: 10px;
   padding: 5px 10px;
+  margin-bottom: 10px;
   font-size: 14px;
   background-color: #007bff;
   color: white;

@@ -10,9 +10,10 @@ import Demonstracao from "../pages/Demonstracao";
 import Suporte from "../pages/Suporte";
 import Tutorial from "../pages/Tutorial";
 
+
 const Private = ({ Item }) => {
   const { signed } = useAuth();
-
+  
   return signed > 0 ? <Item /> : <Signin />;
 };
 
